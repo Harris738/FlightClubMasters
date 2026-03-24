@@ -1,221 +1,575 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="de">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    
-    <link rel="icon" type="image/png" href="image.png">
-    <link rel="apple-touch-icon" href="image.png">
-    <meta name="apple-mobile-web-app-title" content="FlightClub">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+
+    <link rel="icon" type="image/png" href="image.png" />
+    <link rel="apple-touch-icon" href="image.png" />
+    <meta name="apple-mobile-web-app-title" content="FlightClub" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta
+      name="apple-mobile-web-app-status-bar-style"
+      content="black-translucent"
+    />
 
     <title>FlightClub Masters 2026</title>
     <style>
-        :root {
-            --gold: #d4af37;
-            --bright-gold: #f1c40f;
-            --dark-bg: #0d0d0d;
-            --card-bg: rgba(25, 25, 25, 0.95);
-            --carbon-pattern: radial-gradient(#222 1px, transparent 0);
-            --qualify-green: #27ae60;
-            --btn-grad: linear-gradient(135deg, #d4af37 0%, #f1c40f 100%);
+      :root {
+        --gold: #d4af37;
+        --bright-gold: #f1c40f;
+        --dark-bg: #0d0d0d;
+        --card-bg: rgba(25, 25, 25, 0.95);
+        --carbon-pattern: radial-gradient(#222 1px, transparent 0);
+        --qualify-green: #27ae60;
+        --btn-grad: linear-gradient(135deg, #d4af37 0%, #f1c40f 100%);
+      }
+
+      body {
+        font-family: "Segoe UI", Roboto, sans-serif;
+        background-color: var(--dark-bg);
+        background-image: var(--carbon-pattern);
+        background-size: 20px 20px;
+        color: #efefef;
+        padding: 10px;
+        margin: 0;
+      }
+
+      .container {
+        max-width: 900px;
+        margin: auto;
+        background: var(--card-bg);
+        padding: 15px;
+        border-radius: 20px;
+        border: 1px solid rgba(212, 175, 55, 0.2);
+        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8);
+        backdrop-filter: blur(10px);
+        position: relative;
+      }
+
+      h1 {
+        text-align: center;
+        text-transform: uppercase;
+        font-size: 1.8rem;
+        letter-spacing: 2px;
+        margin-bottom: 25px;
+        color: #fff;
+      }
+      h1 span {
+        background: linear-gradient(
+          to bottom,
+          #fff 0%,
+          var(--gold) 50%,
+          #856d21 100%
+        );
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        display: inline-block;
+      }
+      h2 {
+        color: var(--gold);
+        text-transform: uppercase;
+        font-size: 1.1rem;
+        border-bottom: 1px solid rgba(212, 175, 55, 0.3);
+        padding-bottom: 10px;
+        margin-top: 30px;
+      }
+
+      .table-wrapper {
+        width: 100%;
+        overflow-x: auto;
+        border-radius: 15px;
+        background: rgba(0, 0, 0, 0.3);
+        border: 1px solid #333;
+        margin-bottom: 10px;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+      th {
+        background: rgba(212, 175, 55, 0.1);
+        color: var(--gold);
+        padding: 12px;
+        font-size: 0.75rem;
+      }
+      td {
+        padding: 12px 8px;
+        border-bottom: 1px solid #222;
+        text-align: center;
+        font-size: 0.9rem;
+      }
+
+      /* FIX FÜR MOBILE SPIELPLAN ANZEIGE */
+      .match-row td {
+        padding: 10px 4px;
+        font-size: 0.85rem;
+      }
+      .match-row td:first-child {
+        text-align: right;
+        width: 38%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      .match-row td:last-child {
+        text-align: left;
+        width: 38%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      .match-row td:nth-child(2) {
+        width: 24%;
+        white-space: nowrap;
+      }
+
+      .final-spot-cell {
+        border-left: 5px solid var(--qualify-green);
+        background: rgba(39, 174, 96, 0.1);
+        font-weight: bold;
+      }
+      .gold-spot-cell {
+        border-left: 5px solid var(--gold);
+        background: linear-gradient(
+          135deg,
+          rgba(212, 175, 55, 0.2) 0%,
+          rgba(241, 196, 15, 0.2) 100%
+        ) !important;
+        color: #ffffff !important;
+        font-weight: bold;
+      }
+
+      .stats-controls {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        background: rgba(255, 255, 255, 0.03);
+        padding: 15px;
+        border-radius: 15px;
+        border: 1px solid #333;
+        margin-bottom: 20px;
+      }
+      @media (min-width: 600px) {
+        .stats-controls {
+          flex-direction: row;
         }
+      }
 
-        body { 
-            font-family: 'Segoe UI', Roboto, sans-serif; 
-            background-color: var(--dark-bg);
-            background-image: var(--carbon-pattern);
-            background-size: 20px 20px;
-            color: #efefef; padding: 10px; margin: 0; 
-        }
+      select,
+      .add-btn,
+      .action-btn {
+        padding: 12px;
+        border-radius: 8px;
+        font-weight: bold;
+        border: 1px solid #444;
+        background: #1a1a1a;
+        color: white;
+        cursor: pointer;
+      }
+      .add-btn {
+        background: var(--btn-grad);
+        color: #000;
+        border: none;
+      }
 
-        .container { 
-            max-width: 900px; margin: auto; background: var(--card-bg); 
-            padding: 15px; border-radius: 20px; border: 1px solid rgba(212, 175, 55, 0.2); 
-            box-shadow: 0 20px 50px rgba(0,0,0,0.8); backdrop-filter: blur(10px); position: relative;
-        }
+      .action-btn {
+        width: 100%;
+        margin-top: 20px;
+        letter-spacing: 1px;
+      }
+      .action-btn.finish {
+        background: var(--btn-grad);
+        color: #000;
+        border: none;
+      }
+      .action-btn.reopen {
+        background: transparent;
+        color: #555;
+        border: 1px dashed #333;
+        font-size: 0.8rem;
+      }
 
-        h1 { text-align: center; text-transform: uppercase; font-size: 1.8rem; letter-spacing: 2px; margin-bottom: 25px; color: #fff; }
-        h1 span { background: linear-gradient(to bottom, #fff 0%, var(--gold) 50%, #856d21 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; display: inline-block; }
-        h2 { color: var(--gold); text-transform: uppercase; font-size: 1.1rem; border-bottom: 1px solid rgba(212, 175, 55, 0.3); padding-bottom: 10px; margin-top: 30px; }
+      .reset-btn {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        background: rgba(255, 255, 255, 0.05);
+        color: #555;
+        border: 1px solid #333;
+        padding: 6px 10px;
+        border-radius: 8px;
+        cursor: pointer;
+        z-index: 100;
+        font-size: 0.65rem;
+        text-transform: uppercase;
+      }
 
-        .table-wrapper { width: 100%; overflow-x: auto; border-radius: 15px; background: rgba(0,0,0,0.3); border: 1px solid #333; margin-bottom: 10px; }
-        table { width: 100%; border-collapse: collapse; }
-        th { background: rgba(212, 175, 55, 0.1); color: var(--gold); padding: 12px; font-size: 0.75rem; }
-        td { padding: 12px 8px; border-bottom: 1px solid #222; text-align: center; font-size: 0.9rem; }
-        
-        /* FIX FÜR MOBILE SPIELPLAN ANZEIGE */
-        .match-row td { padding: 10px 4px; font-size: 0.85rem; }
-        .match-row td:first-child { text-align: right; width: 38%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-        .match-row td:last-child { text-align: left; width: 38%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-        .match-row td:nth-child(2) { width: 24%; white-space: nowrap; }
+      .day-section {
+        margin-top: 15px;
+        border-radius: 12px;
+        background: #1a1a1a;
+        border: 1px solid #333;
+        overflow: hidden;
+      }
+      .day-title {
+        background: linear-gradient(to right, #222, #1a1a1a);
+        padding: 15px;
+        cursor: pointer;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .lock-icon {
+        font-size: 1.2rem;
+        margin-right: 10px;
+        cursor: pointer;
+      }
 
-        .final-spot-cell { border-left: 5px solid var(--qualify-green); background: rgba(39, 174, 96, 0.1); font-weight: bold; }
-        .gold-spot-cell { border-left: 5px solid var(--gold); background: linear-gradient(135deg, rgba(212, 175, 55, 0.2) 0%, rgba(241, 196, 15, 0.2) 100%) !important; color: #ffffff !important; font-weight: bold; }
+      .match-row input {
+        width: 35px;
+        height: 30px;
+        background: #000;
+        color: var(--bright-gold);
+        border: 1px solid #444;
+        text-align: center;
+        border-radius: 6px;
+        font-weight: bold;
+        font-size: 1rem;
+        -moz-appearance: textfield;
+      }
+      .match-row input::-webkit-outer-spin-button,
+      .match-row input::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+      }
+      .match-row input:disabled {
+        opacity: 0.5;
+        border-color: #222;
+        color: #666;
+      }
+      /* Fortschrittsanzeige Styling */
+      .progress-container {
+        padding: 10px 15px;
+        background: rgba(0, 0, 0, 0.2);
+        border-bottom: 1px solid #333;
+      }
+      .progress-bar-bg {
+        width: 100%;
+        height: 6px;
+        background: #111;
+        border-radius: 3px;
+        overflow: hidden;
+        margin-bottom: 5px;
+      }
+      .progress-bar-fill {
+        height: 100%;
+        background: var(--btn-grad);
+        width: 0%;
+        transition: width 0.3s ease;
+        box-shadow: 0 0 10px rgba(212, 175, 55, 0.5); /* Goldener Glow */
+      }
+      .progress-info {
+        font-size: 0.7rem;
+        color: #888;
+        text-align: right;
+        text-transform: uppercase;
+      }
+      .day-percent {
+        font-size: 0.75rem;
+        color: var(--gold);
+        margin-right: 10px;
+        font-weight: bold;
+      }
+      .finals-container {
+        margin-top: 40px;
+        padding: 20px;
+        border: 2px solid var(--gold);
+        border-radius: 20px;
+        background: rgba(255, 255, 255, 0.02);
+        display: none;
+      }
+      .final-match-box {
+        background: #111;
+        border: 1px solid #333;
+        border-radius: 15px;
+        margin-bottom: 20px;
+        padding: 15px;
+      }
+      .final-grid {
+        display: grid;
+        grid-template-columns: 1fr auto 1fr;
+        align-items: center;
+        gap: 10px;
+      }
+      .final-player {
+        font-weight: bold;
+        font-size: 1rem;
+        color: #fff;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      .final-score-input {
+        width: 45px;
+        height: 40px;
+        background: #000;
+        border: 1px solid var(--gold);
+        color: var(--bright-gold);
+        border-radius: 10px;
+        text-align: center;
+        font-size: 1.2rem;
+        font-weight: bold;
+      }
+      .final-label {
+        grid-column: 1 / span 3;
+        text-align: center;
+        font-size: 0.7rem;
+        color: var(--gold);
+        text-transform: uppercase;
+        margin-top: 8px;
+        font-weight: bold;
+      }
 
-        .stats-controls { display: flex; flex-direction: column; gap: 10px; background: rgba(255,255,255,0.03); padding: 15px; border-radius: 15px; border: 1px solid #333; margin-bottom: 20px; }
-        @media (min-width: 600px) { .stats-controls { flex-direction: row; } }
-
-        select, .add-btn, .action-btn { padding: 12px; border-radius: 8px; font-weight: bold; border: 1px solid #444; background: #1a1a1a; color: white; cursor: pointer; }
-        .add-btn { background: var(--btn-grad); color: #000; border: none; }
-        
-        .action-btn { width: 100%; margin-top: 20px; letter-spacing: 1px; }
-        .action-btn.finish { background: var(--btn-grad); color: #000; border: none; }
-        .action-btn.reopen { background: transparent; color: #555; border: 1px dashed #333; font-size: 0.8rem; }
-
-        .reset-btn { position: absolute; top: 15px; right: 15px; background: rgba(255,255,255,0.05); color: #555; border: 1px solid #333; padding: 6px 10px; border-radius: 8px; cursor: pointer; z-index: 100; font-size: 0.65rem; text-transform: uppercase; }
-
-        .day-section { margin-top: 15px; border-radius: 12px; background: #1a1a1a; border: 1px solid #333; overflow: hidden; }
-        .day-title { background: linear-gradient(to right, #222, #1a1a1a); padding: 15px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
-        .lock-icon { font-size: 1.2rem; margin-right: 10px; cursor: pointer; }
-
-        .match-row input { width: 35px; height: 30px; background: #000; color: var(--bright-gold); border: 1px solid #444; text-align: center; border-radius: 6px; font-weight: bold; font-size: 1rem; -moz-appearance: textfield; }
-        .match-row input::-webkit-outer-spin-button, .match-row input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
-        .match-row input:disabled { opacity: 0.5; border-color: #222; color: #666; }
-        
-        .finals-container { margin-top: 40px; padding: 20px; border: 2px solid var(--gold); border-radius: 20px; background: rgba(255,255,255,0.02); display: none; }
-        .final-match-box { background: #111; border: 1px solid #333; border-radius: 15px; margin-bottom: 20px; padding: 15px; }
-        .final-grid { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 10px; }
-        .final-player { font-weight: bold; font-size: 1rem; color: #fff; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-        .final-score-input { width: 45px; height: 40px; background: #000; border: 1px solid var(--gold); color: var(--bright-gold); border-radius: 10px; text-align: center; font-size: 1.2rem; font-weight: bold; }
-        .final-label { grid-column: 1 / span 3; text-align: center; font-size: 0.7rem; color: var(--gold); text-transform: uppercase; margin-top: 8px; font-weight: bold; }
-
-        .counter-val { color: #fff; font-weight: bold; font-size: 1.1rem; cursor: pointer; }
-        .flight-master-badge { background: var(--gold); color: #000; padding: 3px 8px; border-radius: 4px; font-size: 0.7rem; font-weight: 900; margin-top: 5px; display: inline-block; }
-        #loading-indicator { text-align: center; color: var(--gold); padding: 20px; font-weight: bold; }
+      .counter-val {
+        color: #fff;
+        font-weight: bold;
+        font-size: 1.1rem;
+        cursor: pointer;
+      }
+      .flight-master-badge {
+        background: var(--gold);
+        color: #000;
+        padding: 3px 8px;
+        border-radius: 4px;
+        font-size: 0.7rem;
+        font-weight: 900;
+        margin-top: 5px;
+        display: inline-block;
+      }
+      #loading-indicator {
+        text-align: center;
+        color: var(--gold);
+        padding: 20px;
+        font-weight: bold;
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
+    <div class="container">
+      <button class="reset-btn" onclick="resetAll()">Reset</button>
+      <h1>🎯 <span>FlightClub Masters</span> 🎯</h1>
+      <div id="loading-indicator">INITIALISIERE DATEN...</div>
 
-<div class="container">
-    <button class="reset-btn" onclick="resetAll()">Reset</button>
-    <h1>🎯 <span>FlightClub Masters</span> 🎯</h1>
-    <div id="loading-indicator">INITIALISIERE DATEN...</div>
-
-    <h2>Tabelle</h2>
-    <div class="table-wrapper">
+      <h2>Tabelle</h2>
+      <div class="table-wrapper">
         <table id="leagueTable">
-            <thead><tr><th>PLATZ</th><th>SPIELER</th><th>SP.</th><th>+/-</th><th>PKT.</th></tr></thead>
-            <tbody></tbody>
+          <thead>
+            <tr>
+              <th>PLATZ</th>
+              <th>SPIELER</th>
+              <th>SP.</th>
+              <th>+/-</th>
+              <th>PKT.</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
         </table>
-    </div>
+      </div>
 
-    <h2>🏆 BESTLEISTUNGEN</h2>
-    <div class="stats-controls">
+      <h2>🏆 BESTLEISTUNGEN</h2>
+      <div class="stats-controls">
         <select id="statPlayer"></select>
         <select id="statType">
-            <option value="180">180 / 171</option>
-            <option value="HF">High Finish</option>
-            <option value="SL">Short Leg</option>
+          <option value="180">180 / 171</option>
+          <option value="HF">High Finish</option>
+          <option value="SL">Short Leg</option>
         </select>
         <button class="add-btn" onclick="addStat()">PUNKT HINZUFÜGEN</button>
-    </div>
-    <div class="table-wrapper">
+      </div>
+      <div class="table-wrapper">
         <table>
-            <thead><tr><th>PLATZ</th><th>SPIELER</th><th>180s</th><th>HF</th><th>SL</th></tr></thead>
-            <tbody id="statsBody"></tbody>
+          <thead>
+            <tr>
+              <th>PLATZ</th>
+              <th>SPIELER</th>
+              <th>180s</th>
+              <th>HF</th>
+              <th>SL</th>
+            </tr>
+          </thead>
+          <tbody id="statsBody"></tbody>
         </table>
-    </div>
+      </div>
 
-    <h2>SPIELPLAN</h2>
-    <div id="schedule"></div>
-    
-    <button id="finish-season-btn" class="action-btn finish" onclick="finishSeason()">🔒 LIGAPHASE ABSCHLIESSEN</button>
-    <button id="reopen-season-btn" class="action-btn reopen" style="display:none" onclick="reopenSeason()">🔓 LIGAPHASE WIEDER ÖFFNEN</button>
+      <h2>SPIELPLAN</h2>
+      <div id="schedule"></div>
 
-    <div id="finals-area" class="finals-container">
-        <h2 style="margin-top:0; text-align:center">🔥 DER FINALTAG</h2>
+      <button
+        id="finish-season-btn"
+        class="action-btn finish"
+        onclick="finishSeason()"
+      >
+        🔒 LIGAPHASE ABSCHLIESSEN
+      </button>
+      <button
+        id="reopen-season-btn"
+        class="action-btn reopen"
+        style="display: none"
+        onclick="reopenSeason()"
+      >
+        🔓 LIGAPHASE WIEDER ÖFFNEN
+      </button>
+
+      <div id="finals-area" class="finals-container">
+        <h2 style="margin-top: 0; text-align: center">🔥 DER FINALTAG</h2>
         <div id="finals-bracket"></div>
+      </div>
     </div>
-</div>
 
-<script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-    import { getDatabase, ref, set, onValue, remove, update } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+      import {
+        getDatabase,
+        ref,
+        set,
+        onValue,
+        remove,
+        update,
+      } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
-    const firebaseConfig = {
+      const firebaseConfig = {
         apiKey: "AIzaSyAMOnKCkWLfnMlumlTFpeMpuTBgdN5VjXo",
         authDomain: "flightclub-masters.firebaseapp.com",
-        databaseURL: "https://flightclub-masters-default-rtdb.europe-west1.firebasedatabase.app",
+        databaseURL:
+          "https://flightclub-masters-default-rtdb.europe-west1.firebasedatabase.app",
         projectId: "flightclub-masters",
         storageBucket: "flightclub-masters.firebasestorage.app",
         messagingSenderId: "65007998399",
-        appId: "1:65007998399:web:526572b68e1b243dbcfd0a"
-    };
+        appId: "1:65007998399:web:526572b68e1b243dbcfd0a",
+      };
 
-    const app = initializeApp(firebaseConfig);
-    const db = getDatabase(app);
+      const app = initializeApp(firebaseConfig);
+      const db = getDatabase(app);
 
-    const players = ["Tim", "Cicho", "Harris", "David", "Matti", "Steffen"];
-    const fairRotation = [[0,1], [2,3], [4,5], [0,2], [1,4], [3,5], [0,4], [1,3], [2,5], [0,5], [1,2], [3,4], [0,3], [2,4], [1,5]];
-    const SECRET_PW = "5869";
-    
-    let openDays = new Set();
-    let currentTop4 = [];
+      const players = ["Tim", "Cicho", "Harris", "David", "Matti", "Steffen"];
+      const fairRotation = [
+        [0, 1],
+        [2, 3],
+        [4, 5],
+        [0, 2],
+        [1, 4],
+        [3, 5],
+        [0, 4],
+        [1, 3],
+        [2, 5],
+        [0, 5],
+        [1, 2],
+        [3, 4],
+        [0, 3],
+        [2, 4],
+        [1, 5],
+      ];
+      const SECRET_PW = "5869";
 
-    window.finishSeason = () => {
-        if (prompt("Passwort zum Beenden:") === SECRET_PW) set(ref(db, 'seasonFinished'), true);
-    };
+      let openDays = new Set();
+      let currentTop4 = [];
 
-    window.reopenSeason = () => {
-        if (prompt("Passwort zum Öffnen:") === SECRET_PW) set(ref(db, 'seasonFinished'), false);
-    };
+      window.finishSeason = () => {
+        if (prompt("Passwort zum Beenden:") === SECRET_PW)
+          set(ref(db, "seasonFinished"), true);
+      };
 
-    window.toggleLock = (d) => {
+      window.reopenSeason = () => {
+        if (prompt("Passwort zum Öffnen:") === SECRET_PW)
+          set(ref(db, "seasonFinished"), false);
+      };
+
+      window.toggleLock = (d) => {
         event.stopPropagation();
-        onValue(ref(db, 'locks/day' + d), (snap) => {
+        onValue(
+          ref(db, "locks/day" + d),
+          (snap) => {
             const isLocked = snap.val();
             if (isLocked) {
-                if (prompt("Passwort zum Entsperren:") === SECRET_PW) set(ref(db, 'locks/day' + d), false);
+              if (prompt("Passwort zum Entsperren:") === SECRET_PW)
+                set(ref(db, "locks/day" + d), false);
             } else {
-                if (confirm("Spieltag sperren?")) set(ref(db, 'locks/day' + d), true);
+              if (confirm("Spieltag sperren?"))
+                set(ref(db, "locks/day" + d), true);
             }
-        }, { onlyOnce: true });
-    };
+          },
+          { onlyOnce: true },
+        );
+      };
 
-    window.updateLeague = (id) => {
+      window.updateLeague = (id) => {
         const row = document.querySelector(`.match-row[data-id="${id}"]`);
-        const s1 = row.querySelector('.s1').value;
-        const s2 = row.querySelector('.s2').value;
+        const s1 = row.querySelector(".s1").value;
+        const s2 = row.querySelector(".s2").value;
         update(ref(db, `matches/${id}`), { s1, s2 });
-    };
+      };
 
-    window.updateFinals = (fid) => {
-        const box = document.querySelector(`.final-match-box[data-fid="${fid}"]`);
-        const s1 = box.querySelector('.fs1').value;
-        const s2 = box.querySelector('.fs2').value;
+      window.updateFinals = (fid) => {
+        const box = document.querySelector(
+          `.final-match-box[data-fid="${fid}"]`,
+        );
+        const s1 = box.querySelector(".fs1").value;
+        const s2 = box.querySelector(".fs2").value;
         update(ref(db, `finals/${fid}`), { s1, s2 });
-    };
+      };
 
-    window.toggleMonth = (id, btn) => {
-        const el = document.getElementById('month-' + id);
-        const isOpen = el.style.display === 'table';
-        el.style.display = isOpen ? 'none' : 'table';
-        btn.querySelector('.arrow').innerText = isOpen ? '▼' : '▲';
-        if (!isOpen) openDays.add(id); else openDays.delete(id);
-    };
+      window.toggleMonth = (id, btn) => {
+        const el = document.getElementById("month-" + id);
+        // Wir prüfen jetzt auf "block", da der neue Container ein Div ist
+        const isOpen = el.style.display === "block";
+        el.style.display = isOpen ? "none" : "block";
 
-    window.addStat = () => {
-        const player = document.getElementById('statPlayer').value;
-        const type = document.getElementById('statType').value;
-        onValue(ref(db, 'bests'), snap => {
+        btn.querySelector(".arrow").innerText = isOpen ? "▼" : "▲";
+
+        if (!isOpen) {
+          openDays.add(id);
+        } else {
+          openDays.delete(id);
+        }
+      };
+
+      window.addStat = () => {
+        const player = document.getElementById("statPlayer").value;
+        const type = document.getElementById("statType").value;
+        onValue(
+          ref(db, "bests"),
+          (snap) => {
             const bests = snap.val() || [];
-            bests.push({player, type, id: Date.now()});
-            set(ref(db, 'bests'), bests);
-        }, { onlyOnce: true });
-    };
+            bests.push({ player, type, id: Date.now() });
+            set(ref(db, "bests"), bests);
+          },
+          { onlyOnce: true },
+        );
+      };
 
-    window.removeLatestStat = (name, type) => {
-        if (!confirm('Punkt abziehen?')) return;
-        onValue(ref(db, 'bests'), snap => {
+      window.removeLatestStat = (name, type) => {
+        if (!confirm("Punkt abziehen?")) return;
+        onValue(
+          ref(db, "bests"),
+          (snap) => {
             let bests = snap.val() || [];
-            const idx = bests.findLastIndex(b => b.player === name && b.type === type);
-            if (idx > -1) { bests.splice(idx, 1); set(ref(db, 'bests'), bests); }
-        }, { onlyOnce: true });
-    };
+            const idx = bests.findLastIndex(
+              (b) => b.player === name && b.type === type,
+            );
+            if (idx > -1) {
+              bests.splice(idx, 1);
+              set(ref(db, "bests"), bests);
+            }
+          },
+          { onlyOnce: true },
+        );
+      };
 
-    onValue(ref(db), (snapshot) => {
+      onValue(ref(db), (snapshot) => {
         const data = snapshot.val() || {};
         const isFinished = data.seasonFinished || false;
         const matches = data.matches || {};
@@ -223,109 +577,180 @@
         const bests = data.bests || [];
         const finals = data.finals || {};
 
-        const statPlayerEl = document.getElementById('statPlayer');
-        const lastSelectedPlayer = statPlayerEl ? statPlayerEl.value : players[0];
+        const statPlayerEl = document.getElementById("statPlayer");
+        const lastSelectedPlayer = statPlayerEl
+          ? statPlayerEl.value
+          : players[0];
 
-        let stats = players.map(name => ({ name, played: 0, diff: 0, points: 0 }));
-        Object.keys(matches).forEach(id => {
-            const m = matches[id], pIdx = fairRotation[parseInt(id) % 15];
-            const s1 = parseInt(m.s1), s2 = parseInt(m.s2);
-            if (!isNaN(s1) && !isNaN(s2)) {
-                stats[pIdx[0]].played++; stats[pIdx[1]].played++;
-                stats[pIdx[0]].diff += (s1 - s2); stats[pIdx[1]].diff += (s2 - s1);
-                if (s1 > s2) stats[pIdx[0]].points += 2; else if (s2 > s1) stats[pIdx[1]].points += 2;
-                else { stats[pIdx[0]].points++; stats[pIdx[1]].points++; }
+        let stats = players.map((name) => ({
+          name,
+          played: 0,
+          diff: 0,
+          points: 0,
+        }));
+        Object.keys(matches).forEach((id) => {
+          const m = matches[id],
+            pIdx = fairRotation[parseInt(id) % 15];
+          const s1 = parseInt(m.s1),
+            s2 = parseInt(m.s2);
+          if (!isNaN(s1) && !isNaN(s2)) {
+            stats[pIdx[0]].played++;
+            stats[pIdx[1]].played++;
+            stats[pIdx[0]].diff += s1 - s2;
+            stats[pIdx[1]].diff += s2 - s1;
+            if (s1 > s2) stats[pIdx[0]].points += 2;
+            else if (s2 > s1) stats[pIdx[1]].points += 2;
+            else {
+              stats[pIdx[0]].points++;
+              stats[pIdx[1]].points++;
             }
+          }
         });
-        stats.sort((a,b) => b.points - a.points || b.diff - a.diff);
-        currentTop4 = stats.slice(0, 4).map(s => s.name);
-        document.querySelector('#leagueTable tbody').innerHTML = stats.map((s,i) => `
-            <tr><td class="${i < 4 ? 'final-spot-cell' : ''}">${i+1}</td><td>${s.name}</td><td>${s.played}</td><td>${s.diff>0?'+'+s.diff:s.diff}</td><td><strong>${s.points}</strong></td></tr>
-        `).join('');
+        stats.sort((a, b) => b.points - a.points || b.diff - a.diff);
+        currentTop4 = stats.slice(0, 4).map((s) => s.name);
+        document.querySelector("#leagueTable tbody").innerHTML = stats
+          .map(
+            (s, i) => `
+            <tr><td class="${i < 4 ? "final-spot-cell" : ""}">${i + 1}</td><td>${s.name}</td><td>${s.played}</td><td>${s.diff > 0 ? "+" + s.diff : s.diff}</td><td><strong>${s.points}</strong></td></tr>
+        `,
+          )
+          .join("");
 
-        const bStats = players.map(name => ({
-            name, total: bests.filter(b => b.player === name).length,
-            c180: bests.filter(b => b.player === name && b.type === '180').length,
-            cHF: bests.filter(b => b.player === name && b.type === 'HF').length,
-            cSL: bests.filter(b => b.player === name && b.type === 'SL').length
-        })).sort((a,b) => b.total - a.total);
+        const bStats = players
+          .map((name) => ({
+            name,
+            total: bests.filter((b) => b.player === name).length,
+            c180: bests.filter((b) => b.player === name && b.type === "180")
+              .length,
+            cHF: bests.filter((b) => b.player === name && b.type === "HF")
+              .length,
+            cSL: bests.filter((b) => b.player === name && b.type === "SL")
+              .length,
+          }))
+          .sort((a, b) => b.total - a.total);
 
-        document.getElementById('statsBody').innerHTML = bStats.map((s,i) => {
-            const isFirst = (i === 0 && s.total > 0);
+        document.getElementById("statsBody").innerHTML = bStats
+          .map((s, i) => {
+            const isFirst = i === 0 && s.total > 0;
             const isFM = isFinished && isFirst;
             return `<tr>
-                <td class="${isFirst ? 'gold-spot-cell' : ''}">${i+1}</td>
-                <td>${s.name} ${isFM ? '<br><span class="flight-master-badge">👑 FLIGHT MASTER</span>' : ''}</td>
+                <td class="${isFirst ? "gold-spot-cell" : ""}">${i + 1}</td>
+                <td>${s.name} ${isFM ? '<br><span class="flight-master-badge">👑 FLIGHT MASTER</span>' : ""}</td>
                 <td><span class="counter-val" onclick="removeLatestStat('${s.name}','180')">${s.c180}</span></td>
                 <td><span class="counter-val" onclick="removeLatestStat('${s.name}','HF')">${s.cHF}</span></td>
                 <td><span class="counter-val" onclick="removeLatestStat('${s.name}','SL')">${s.cSL}</span></td>
             </tr>`;
-        }).join('');
+          })
+          .join("");
 
-        document.getElementById('finish-season-btn').style.display = isFinished ? 'none' : 'block';
-        document.getElementById('reopen-season-btn').style.display = isFinished ? 'block' : 'none';
-        document.getElementById('finals-area').style.display = isFinished ? 'block' : 'none';
+        document.getElementById("finish-season-btn").style.display = isFinished
+          ? "none"
+          : "block";
+        document.getElementById("reopen-season-btn").style.display = isFinished
+          ? "block"
+          : "none";
+        document.getElementById("finals-area").style.display = isFinished
+          ? "block"
+          : "none";
 
-        let html = '', mIdx = 0;
-        for(let d = 1; d <= 12; d++) {
-            const isLocked = locks['day'+d];
-            const displayStyle = openDays.has(d) ? 'table' : 'none';
-            const arrowChar = openDays.has(d) ? '▲' : '▼';
+        let html = "",
+          mIdx = 0;
+        for (let d = 1; d <= 12; d++) {
+          const isLocked = locks["day" + d];
+          // WICHTIG: Hier "block" statt "table", damit der Balken über die Tabelle passt
+          const displayStyle = openDays.has(d) ? "block" : "none";
+          const arrowChar = openDays.has(d) ? "▲" : "▼";
 
-            html += `<div class="day-section">
+          // --- NEU: BERECHNUNG DES FORTSCHRITTS ---
+          let completed = 0;
+          for (let i = 0; i < 15; i++) {
+            const m = matches[mIdx + i];
+            if (
+              m &&
+              m.s1 !== "" &&
+              m.s2 !== "" &&
+              m.s1 !== undefined &&
+              m.s2 !== undefined
+            ) {
+              completed++;
+            }
+          }
+          const percent = Math.round((completed / 15) * 100);
+
+          html += `<div class="day-section">
                 <div class="day-title" onclick="toggleMonth(${d}, this)">
                     <span>SPIELTAG ${d}</span>
-                    <div><span class="lock-icon" onclick="toggleLock(${d})">${isLocked ? '🔒' : '🔓'}</span><span class="arrow">${arrowChar}</span></div>
+                    <div style="display:flex; align-items:center;">
+                        <span class="day-percent">${percent}%</span>
+                        <span class="lock-icon" onclick="toggleLock(${d})">${isLocked ? "🔒" : "🔓"}</span>
+                        <span class="arrow">${arrowChar}</span>
+                    </div>
                 </div>
-                <table id="month-${d}" style="display:${displayStyle}; width:100%">`;
-            fairRotation.forEach(pair => {
-                const s1 = matches[mIdx]?.s1 || '', s2 = matches[mIdx]?.s2 || '';
-                html += `<tr class="match-row" data-id="${mIdx}">
+                
+                <div id="month-${d}" style="display:${displayStyle};">
+                    <div class="progress-container">
+                        <div class="progress-bar-bg">
+                            <div class="progress-bar-fill" style="width: ${percent}%"></div>
+                        </div>
+                        <div class="progress-info">${completed} / 15 Spiele fertig</div>
+                    </div>
+                    
+                    <table style="width:100%">`;
+
+          fairRotation.forEach((pair) => {
+            const s1 = matches[mIdx]?.s1 || "",
+              s2 = matches[mIdx]?.s2 || "";
+            html += `<tr class="match-row" data-id="${mIdx}">
                     <td>${players[pair[0]]}</td>
-                    <td><input type="number" class="s1" value="${s1}" oninput="updateLeague(${mIdx})" ${isLocked || isFinished ? 'disabled' : ''}> : 
-                        <input type="number" class="s2" value="${s2}" oninput="updateLeague(${mIdx})" ${isLocked || isFinished ? 'disabled' : ''}></td>
+                    <td><input type="number" class="s1" value="${s1}" oninput="updateLeague(${mIdx})" ${isLocked || isFinished ? "disabled" : ""}> : 
+                        <input type="number" class="s2" value="${s2}" oninput="updateLeague(${mIdx})" ${isLocked || isFinished ? "disabled" : ""}></td>
                     <td>${players[pair[1]]}</td>
                 </tr>`;
-                mIdx++;
-            });
-            html += `</table></div>`;
+            mIdx++;
+          });
+          html += `</table></div></div>`; // Zwei schließende Divs am Ende!
         }
-        document.getElementById('schedule').innerHTML = html;
-        document.getElementById('statPlayer').innerHTML = players.map(p => `<option value="${p}">${p}</option>`).join('');
-        document.getElementById('statPlayer').value = lastSelectedPlayer;
-        document.getElementById('loading-indicator').style.display = 'none';
+        document.getElementById("schedule").innerHTML = html;
+        document.getElementById("statPlayer").innerHTML = players
+          .map((p) => `<option value="${p}">${p}</option>`)
+          .join("");
+        document.getElementById("statPlayer").value = lastSelectedPlayer;
+        document.getElementById("loading-indicator").style.display = "none";
 
         if (isFinished) {
-            const p = currentTop4, f = finals;
-            document.getElementById('finals-bracket').innerHTML = `
+          const p = currentTop4,
+            f = finals;
+          document.getElementById("finals-bracket").innerHTML = `
                 <div class="final-match-box" data-fid="sf1">
                     <div class="final-grid">
-                        <div class="final-player" style="text-align:right">${p[0] || '1. Platz'}</div>
-                        <div><input type="number" class="final-score-input fs1" value="${f.sf1?.s1 || ''}" oninput="updateFinals('sf1')"> : <input type="number" class="final-score-input fs2" value="${f.sf1?.s2 || ''}" oninput="updateFinals('sf1')"></div>
-                        <div class="final-player" style="text-align:left">${p[3] || '4. Platz'}</div>
+                        <div class="final-player" style="text-align:right">${p[0] || "1. Platz"}</div>
+                        <div><input type="number" class="final-score-input fs1" value="${f.sf1?.s1 || ""}" oninput="updateFinals('sf1')"> : <input type="number" class="final-score-input fs2" value="${f.sf1?.s2 || ""}" oninput="updateFinals('sf1')"></div>
+                        <div class="final-player" style="text-align:left">${p[3] || "4. Platz"}</div>
                         <div class="final-label">Halbfinale 1 (FT5 Sets)</div>
                     </div>
                 </div>
                 <div class="final-match-box" data-fid="sf2">
                     <div class="final-grid">
-                        <div class="final-player" style="text-align:right">${p[1] || '2. Platz'}</div>
-                        <div><input type="number" class="final-score-input fs1" value="${f.sf2?.s1 || ''}" oninput="updateFinals('sf2')"> : <input type="number" class="final-score-input fs2" value="${f.sf2?.s2 || ''}" oninput="updateFinals('sf2')"></div>
-                        <div class="final-player" style="text-align:left">${p[2] || '3. Platz'}</div>
+                        <div class="final-player" style="text-align:right">${p[1] || "2. Platz"}</div>
+                        <div><input type="number" class="final-score-input fs1" value="${f.sf2?.s1 || ""}" oninput="updateFinals('sf2')"> : <input type="number" class="final-score-input fs2" value="${f.sf2?.s2 || ""}" oninput="updateFinals('sf2')"></div>
+                        <div class="final-player" style="text-align:left">${p[2] || "3. Platz"}</div>
                         <div class="final-label">Halbfinale 2 (FT5 Sets)</div>
                     </div>
                 </div>
                 <div class="final-match-box" data-fid="f" style="border-color:var(--gold); background: rgba(212,175,55,0.08)">
                     <div class="final-grid">
                         <div class="final-player" style="text-align:right; color:var(--gold)">SIEGER SF1</div>
-                        <div><input type="number" class="final-score-input fs1" value="${f.f?.s1 || ''}" oninput="updateFinals('f')"> : <input type="number" class="final-score-input fs2" value="${f.f?.s2 || ''}" oninput="updateFinals('f')"></div>
+                        <div><input type="number" class="final-score-input fs1" value="${f.f?.s1 || ""}" oninput="updateFinals('f')"> : <input type="number" class="final-score-input fs2" value="${f.f?.s2 || ""}" oninput="updateFinals('f')"></div>
                         <div class="final-player" style="text-align:left; color:var(--gold)">SIEGER SF2</div>
                         <div class="final-label" style="opacity:1; font-size:1rem">🏆 FINALE (FT6 Sets) 🏆</div>
                     </div>
                 </div>`;
         }
-    });
+      });
 
-    window.resetAll = () => { if(confirm("ALLES LÖSCHEN?")) remove(ref(db)); };
-</script>
-</body>
+      window.resetAll = () => {
+        if (confirm("ALLES LÖSCHEN?")) remove(ref(db));
+      };
+    </script>
+  </body>
 </html>
